@@ -159,35 +159,31 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="shop-cart.html">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue">2</span>
+                                        {% if user.is_authenticated %}
+                                        <span class="pro-count blue">{{cart_len}}</span>
+                                        {% endif %}
                                     </a>
                                     <a href="shop-cart.html"><span class="lable">Cart</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
+                                            {% if user.is_authenticated %}
+                                            {% for Cart in cart %}
+                                            
+                                            
                                             <li>
                                                 <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" /></a>
+                                                    <a href="shop-product-right.html"><img alt="Nest" src="{{Cart.product.image.url}}" /></a>
                                                 </div>
                                                 <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
+                                                    <h4><a href="shop-product-right.html">{{Cart.product.name}}</a></h4>
+                                                    <h4><span>1 × </span>{{Cart.product.price}} Tk</h4>
                                                 </div>
                                                 <div class="shopping-cart-delete">
                                                     <a href="#"><i class="fi-rs-cross-small"></i></a>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Nest" src="{% static 'assets/imgs/shop/thumbnail-2.jpg' %}" /></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
+                                            {% endfor %}
+                                            {% endif %}
                                         </ul>
                                         <div class="shopping-cart-footer">
                                             <div class="shopping-cart-total">
@@ -324,18 +320,15 @@
                                     <li>
                                         <a href="{% url 'products' %}">Shop <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
-                                            <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                            <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                            <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                            <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                            <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
+                                            <li><a href="{% url "products" %}">All Products</a></li>
                                             <li>
-                                                <a href="#">Single Product <i class="fi-rs-angle-right"></i></a>
+                                                <a href="{% url "Category" %}">Categories <i class="fi-rs-angle-right"></i></a>
                                                 <ul class="level-menu">
-                                                    <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                                    <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                                    <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                                    <li><a href="shop-product-vendor.html">Product – Vendor Infor</a></li>
+                                                    {% for i in category %}
+                                                    <li>
+                                                        <a href="{% url "Category" %}">{{i.title}}</a>
+                                                    </li>
+                                                    {% endfor %}
                                                 </ul>
                                             </li>
                                             <li><a href="shop-filter.html">Shop – Filter</a></li>
@@ -871,6 +864,9 @@
     <script src="{% static 'assets/js/plugins/jquery.theia.sticky.js' %}"></script>
     <script src="{% static 'assets/js/plugins/jquery.elevatezoom.js' %}"></script>
     <!-- Template  JS -->
+    {% block scripts %}
+    
+    {% endblock scripts %}
     <script src="{% static './assets/js/main.js' %}"></script>
     <script src="{% static './assets/js/shop.js' %}"></script>
 </body>

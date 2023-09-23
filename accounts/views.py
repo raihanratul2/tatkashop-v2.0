@@ -11,7 +11,8 @@ from .models import profile
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
-
+from shop.models import Cart 
+from CONFIG.urls import *
 
 
 
@@ -19,22 +20,26 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 def home(request):
-    user = request.user
-    return render(request,'home.html')
+    cart = []
+    lenth =0
+    if request.user.is_authenticated:
+        lenth = len(Cart.objects.filter(user=request.user))
+        cart = Cart.objects.filter(user = request.user)
+    return render(request,'home.html',{'cart':cart,'cart_len':lenth})
 def login_user(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(username=email,password=password)
         if user :
-            if user.is_active == True and user.is_staff == True:
-                login(request,user)
-                messages.success(request, "Username Logged in!")
-                return redirect('staff')
-            elif user.is_active == True and user.is_superuser == True:
+            if user.is_superuser == True and user.is_staff==True and user.is_active== True:
                 login(request,user)
                 messages.success(request,'User Logged in!')
                 return redirect('admin')
+            elif user.is_staff == True and user.is_active== True:
+                login(request,user)
+                messages.success(request, "Username Logged in!")
+                return redirect('staff')
             elif user.is_active==True:
                 login(request,user)
                 messages.success(request,'User Logged in!')
@@ -147,7 +152,12 @@ def verify_account(request, auth_token):
     return redirect('login')  
 
 def dashboard(request):
-    return render(request,'accounts/cus-dashbord.html')
+    cart = []
+    lenth =0
+    if request.user.is_authenticated:
+        lenth = len(Cart.objects.filter(user=request.user))
+        cart = Cart.objects.filter(user = request.user)
+    return render(request,'accounts/cus-dashbord.html',{'cart':cart,'cart_len':lenth})
 
 
         
